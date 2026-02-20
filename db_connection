@@ -1,0 +1,8 @@
+from pymongo import MongoClient
+
+# Connect to MongoDB
+client = MongoClient("mongodb://localhost:27017")
+db = client["library_management_db"]
+student_collection = db["students"]
+book_collection = db["books"]
+registered_book_collection = db["registered_books"]
