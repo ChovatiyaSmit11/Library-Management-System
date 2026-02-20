@@ -1,0 +1,51 @@
+from pydantic import BaseModel, EmailStr, field_validator
+from typing import List
+from fastapi import UploadFile,File
+from typing import Optional
+import re
+
+class UserSignUp(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    phone_number: str
+    password: str
+    confirm_password: str
+    isActive: bool = False
+    profile_pic: Optional[str] = None  # profile picture path is optional
+
+
+class UserUpdateProfile(BaseModel):
+    first_name: str
+    last_name: str
+    email: EmailStr
+    phone_number: str
+    profile_pic: UploadFile = File(None)
+class UserRegisterResponse(BaseModel):
+    id: str
+    first_name: str
+    last_name: str
+    email: str
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class Book(BaseModel):
+    title: str
+    author: str
+    semester: int
+
+class BookStudentRelation(BaseModel):
+    student_details: str
+    books: List[str]
+    issue_date: str
+    submission_date: str
+
+class QueryModel(BaseModel):
+    query: Optional[str] = None
+    issue_date: Optional[str] = None
+    submission_date: Optional[str] = None
+
+class EmailSchema(BaseModel):
+   email: str
