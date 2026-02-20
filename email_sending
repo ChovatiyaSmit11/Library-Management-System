@@ -1,0 +1,50 @@
+from fastapi_mail import FastMail, MessageSchema, ConnectionConfig
+from starlette.responses import JSONResponse
+import os
+from dotenv import load_dotenv
+load_dotenv()
+
+conf = ConnectionConfig(
+    MAIL_USERNAME=os.getenv('MAIL_USERNAME'),
+    MAIL_PASSWORD=os.getenv('MAIL_PASSWORD'),
+    MAIL_PORT=int(os.getenv('MAIL_PORT')),  
+    MAIL_SERVER=os.getenv('MAIL_SERVER'),
+    MAIL_FROM=os.getenv('MAIL_FROM'),
+    MAIL_STARTTLS=True,
+    MAIL_SSL_TLS=False,
+    USE_CREDENTIALS=True,
+    VALIDATE_CERTS=True,
+)
+
+USER_ACTIVATION_URL = "http://localhost:8000/activate"
+
+# Async function to send an email
+# mail_sending.py
+async def send_mail(email: str):
+    # print(email)
+
+    template = f"""
+        <html>
+        <body>
+        <p>Hi !!!
+        <br>Here is your account activation link: <a href="{USER_ACTIVATION_URL}/{email}">{USER_ACTIVATION_URL}/{email}</a></p>
+        </body>
+        </html>
+    """
+
+    # Message schema
+    message = MessageSchema(
+        subject="Regarding Account Activation",
+        recipients=[email], 
+        body=template,
+        subtype="html"
+    )
+
+    # Initialize FastMail with the connection configuration
+    fm = FastMail(conf)
+    await fm.send_message(message)  # Send the email
+
+    # print(message)
+
+    return JSONResponse(status_code=200, content={"message": "Email has been sent"})
+
